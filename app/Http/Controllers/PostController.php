@@ -10,10 +10,15 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::all();    // Post::all() retrieves all posts from the database, $post variable name
-        return view('posts.index', compact('posts')); // compact() creates an array with the variable name as the key and its value as the value
+        $keyword = $request->input('keyword'); // Get the keyword from the request
+
+        // $posts = Post::all();    // Post::all() retrieves all posts from the database, $post variable name
+        $posts = Post::when($keyword, function ($query,$keyword){
+            return $query->where('title', 'like', "%$keyword%"); // filter post by title
+        })->paginate(10); // Paginate the posts, 10 per page
+        return view('posts.index', compact('posts','keyword')); // compact() creates an array with the variable name as the key and its value as the value
     }
 
     /**

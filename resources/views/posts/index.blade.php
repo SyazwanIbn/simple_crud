@@ -13,6 +13,16 @@
     <p>{{ session('success') }}</p>
 @endif
 
+<div class="mb-4">
+    <form action="{{ route('posts.index')}}" method="GET">
+        <input type="text" name="search" placeholder="Cari tajuk post..." value="{{ request('search') }}"
+        class="border rounded px-3 py-2">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Cari</button>
+
+    </form>
+
+</div>
+
 <ul>
     @foreach ($posts as $post)
         <li>
@@ -28,6 +38,11 @@
         </li>
     @endforeach
 </ul>
+
+{{-- Pagination --}}
+{{ $posts->appends(['search' => request('search')])->links() }}
+
+{{-- Jika tiada post --}}
 
 @endsection <!-- Tutup section content -->
 
